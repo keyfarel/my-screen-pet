@@ -1,0 +1,15 @@
+/* Class untuk Pet Kita */
+.my-pet-walker {
+    position: fixed;       /* Agar tetap di layar walau discroll */
+    bottom: 0px;           /* Nempel di lantai bawah */
+    z-index: 2147483647;   /* Angka tertinggi CSS agar selalu di paling depan */
+    width: 128px;          /* Sesuaikan dengan ukuran gambar kamu */
+    height: auto;
+    
+    /* MAGIC SAUCE: */
+    pointer-events: none;  /* PENTING! Agar klik tembus ke belakang gambar */
+    user-select: none;     /* Agar gambar tidak bisa di-blok/select text */
+    
+    /* Animasi transisi saat berbalik arah (flip) */
+    transition: transform 0.2s ease-in-out; 
+}
