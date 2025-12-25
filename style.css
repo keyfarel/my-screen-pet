@@ -1,15 +1,31 @@
-/* Class untuk Pet Kita */
+/* Update class utama ini */
 .my-pet-walker {
-    position: fixed;       /* Agar tetap di layar walau discroll */
-    bottom: 0px;           /* Nempel di lantai bawah */
-    z-index: 2147483647;   /* Angka tertinggi CSS agar selalu di paling depan */
-    width: 128px;          /* Sesuaikan dengan ukuran gambar kamu */
+    position: fixed;
+    bottom: 0px;
+    z-index: 2147483647;
+    width: 128px;
     height: auto;
     
-    /* MAGIC SAUCE: */
-    pointer-events: none;  /* PENTING! Agar klik tembus ke belakang gambar */
-    user-select: none;     /* Agar gambar tidak bisa di-blok/select text */
+    /* UBAH INI: Dari none jadi auto agar bisa diklik */
+    pointer-events: auto; 
+    cursor: pointer;      /* Ubah kursor jadi jari telunjuk saat hover */
+    user-select: none;
     
-    /* Animasi transisi saat berbalik arah (flip) */
-    transition: transform 0.2s ease-in-out; 
+    /* Transisi halus untuk transformasi (flip & lompat) */
+    transition: transform 0.1s ease-out, bottom 0.3s ease-in-out; /* Untuk efek lompat */
+}
+
+/* Tambahkan class baru untuk efek lompat */
+.pet-jump {
+    bottom: 30px !important; /* Meloncat naik 30px */
+}
+
+/* Class khusus untuk menyembunyikan pet */
+.hide-my-pet .my-pet-walker {
+    display: none !important;
+}
+
+.my-pet-walker.dragging {
+    transition: none !important;
+    cursor: grabbing !important; /* Tangan menggenggam */
 }

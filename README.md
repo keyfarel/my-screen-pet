@@ -1,42 +1,42 @@
-# My Screen Pet – Chrome Extension (MVP)
+# 🐾 My Screen Pet – Chrome Extension (v1.1)
 
-Ekstensi Chrome sederhana yang menampilkan karakter pixel art sebagai overlay di layar browser. Dibangun menggunakan HTML, CSS, dan JavaScript tanpa framework.
+Ekstensi Chrome interaktif yang menampilkan karakter pixel art hidup di layar browser Anda. Dibangun menggunakan HTML, CSS, dan Vanilla JS (Manifest V3).
 
-## Fitur Saat Ini (MVP)
+## 🌟 Fitur Utama
 
-- **Overlay Character**  
-  Karakter tampil di atas halaman web menggunakan `z-index` tinggi.
+### 1. Core Mechanics
+- **Overlay Character:** Karakter berjalan di atas elemen web (`z-index` tinggi).
+- **Pac-Man Effect:** Karakter menembus tepi layar dan muncul di sisi sebaliknya.
+- **Natural Behavior:**
+  - **Walking & Blinking:** Animasi langkah kaki yang sinkron dengan kedipan mata.
+  - **Idle/Sitting:** Karakter sesekali duduk beristirahat secara acak.
 
-- **Movement**  
-  Karakter berjalan dari kiri ke kanan secara kontinu.
+### 2. Control & Interaction (New!)
+- **Control Panel:** Tombol ON/OFF melalui menu popup ekstensi untuk menyembunyikan pet.
+- **Poke / Click:** Klik sekali pada pet untuk membuatnya kaget dan melompat.
+- **Drag & Drop:**
+  - Angkat dan pindahkan pet ke posisi mana pun di layar.
+  - **Gravity:** Pet akan jatuh secara realistis jika dilepas di udara.
+  - **Landing Animation:** Animasi jongkok/mendarat (squash & stretch) saat menyentuh tanah.
+- **Throw to Change Direction:** Geser (drag) pet ke arah tertentu (kiri/kanan) lalu lepas untuk mengubah arah jalannya.
 
-- **Looping (Pac-Man Effect)**  
-  Saat mencapai tepi kanan layar, karakter kembali muncul dari sisi kiri.
-
-- **Natural Behavior**
-  - **Walking:** Animasi langkah dan kedipan mata ketika bergerak.  
-  - **Sitting:** Karakter berhenti secara acak untuk duduk.  
-  - **Blinking:** Karakter berkedip saat berjalan maupun duduk.
-
-- **Interaction**  
-  Menggunakan `pointer-events: none` sehingga tidak mengganggu aktivitas klik pengguna di halaman.
-
-## Struktur File
+## 📂 Struktur File
 
 ```text
 my-screen-pet/
 ├── assets/
-│   ├── walk_1.png        (Animasi berjalan – fase A, mata terbuka)
-│   ├── walk_2.png        (Animasi berjalan – fase B, mata terbuka)
-│   ├── walk_1_blink.png  (Animasi berjalan – fase A, mata tertutup)
-│   ├── walk_2_blink.png  (Animasi berjalan – fase B, mata tertutup)
-│   ├── sit_1.png         (Posisi duduk, mata terbuka)
-│   ├── sit_blink.png     (Posisi duduk, mata tertutup)
-│   └── idle_blink.png    (Posisi diam, mata tertutup)
-├── content.js            (Logika animasi dan pergerakan)
-├── manifest.json         (Konfigurasi Extension Manifest V3)
-├── style.css             (Pengaturan posisi dan layering)
-├── README.md             (Dokumentasi utama)
-└── PLANNING.md           (Rencana pengembangan berikutnya)
-```
-
+│   ├── walk_1.png          (Jalan A - Melek)
+│   ├── walk_2.png          (Jalan B - Melek)
+│   ├── walk_1_blink.png    (Jalan A - Merem)
+│   ├── walk_2_blink.png    (Jalan B - Merem)
+│   ├── sit_1.png           (Duduk - Melek)
+│   ├── sit_blink.png       (Duduk - Merem)
+│   ├── jump_shock.png      (Lompat/Kaget/Diangkat)
+│   └── jump_land.png       (Mendarat/Jongkok)
+├── content.js              (Logika fisika, animasi, dan interaksi mouse)
+├── popup.html              (UI Menu Kontrol ON/OFF)
+├── popup.js                (Logika komunikasi tombol popup)
+├── manifest.json           (Konfigurasi Extension V3 & Permissions)
+├── style.css               (Styling animasi & transisi)
+├── README.md               (Dokumentasi)
+└── PLANNING.md             (Roadmap pengembangan)

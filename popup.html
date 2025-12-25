@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            width: 220px;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        /* Header dengan Logo Pet */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            width: 32px;
+            height: 32px;
+            image-rendering: pixelated;
+            /* Agar pixel art tetap tajam */
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Status Indicator (CSS Dot) */
+        .status-container {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Bulatan Status (Pengganti Emoji) */
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: inline-block;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-dot.active {
+            background-color: #4CAF50;
+            box-shadow: 0 0 8px #4CAF50;
+        }
+
+        /* Hijau Nyala */
+        .status-dot.inactive {
+            background-color: #f44336;
+        }
+
+        /* Merah Mati */
+
+        /* Tombol */
+        #toggleBtn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 12px 0;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #toggleBtn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #toggleBtn:active {
+            transform: translateY(0);
+        }
+
+        #toggleBtn.off {
+            background-color: #f44336;
+            /* Merah */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="assets/walk_1.png" alt="Logo">
+        <h2>Pet Control</h2>
+    </div>
+
+    <div class="status-container">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Checking...</span>
+    </div>
+
+    <button id="toggleBtn">Turn OFF</button>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

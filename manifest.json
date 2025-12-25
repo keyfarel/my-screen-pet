@@ -1,8 +1,19 @@
 {
     "manifest_version": 3,
     "name": "My Screen Pet MVP",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Menampilkan pet berjalan, teleport, dan duduk santai di layar browser.",
+    "permissions": [
+        "storage"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "assets/walk_1.png",
+            "48": "assets/walk_1.png",
+            "128": "assets/walk_1.png"
+        }
+    },
     "icons": {
         "16": "assets/walk_1.png",
         "48": "assets/walk_1.png",
@@ -30,7 +41,9 @@
                 "assets/walk_2_blink.png",
                 "assets/sit_1.png",
                 "assets/sit_blink.png",
-                "assets/idle_blink.png"
+                "assets/idle_blink.png",
+                "assets/jump_shock.png",
+                "assets/jump_land.png"
             ],
             "matches": [
                 "<all_urls>"
