@@ -1,42 +1,33 @@
-# 📅 Rencana Pengembangan: Day 3 (Polish & Features)
+# 📅 Rencana Pengembangan: Day 4 (Personality & Final Polish)
 
-**Status Terakhir (Day 2 Completed):**
-✅ Kontrol ON/OFF berhasil diimplementasikan.
-✅ Fitur Drag & Drop dengan fisika gravitasi berjalan mulus.
-✅ Masalah UX "Double Click" diganti dengan solusi "Drag & Throw" yang lebih intuitif.
-✅ Animasi jatuh dan mendarat (landing) sudah natural.
+**Status Terakhir (Day 3 Completed):**
+✅ Sound Effects (8-bit) berfungsi dengan toggle Mute.
+✅ State Persistence (Memory) berjalan lancar (posisi, warna, suara tersimpan).
+✅ Customization (Hue Slider) berhasil diterapkan.
+✅ Handling error context invalidated sudah aman.
 
-## 🎯 Target Fitur Day 3
-Fokus: Menambah "jiwa" pada pet melalui suara dan penyimpanan memori.
+## 🎯 Target Fitur Day 4
+Fokus: Memberikan kepribadian pada pet dan persiapan finalisasi.
 
-### 1. Sound Effects (Audio) 🔊
-Menambahkan umpan balik suara agar interaksi lebih memuaskan.
-- [ ] Cari/Generate aset suara 8-bit sederhana (Free license/CC0).
-  - `jump.mp3` (Suara "Boing" saat diklik).
-  - `land.mp3` (Suara "Thump" kecil saat jatuh).
-  - `step.mp3` (Opsional: suara langkah kaki sangat pelan).
-- [ ] Implementasi `Audio()` object di `content.js`.
-- [ ] Tambah toggle "Mute Sound" di `popup.html`.
+### 1. Speech Bubbles (Balon Bicara) 💬
+Membuat pet terlihat lebih komunikatif dengan menampilkan teks acak.
+- [ ] Buat elemen HTML `div` untuk balon bicara di atas kepala pet.
+- [ ] Buat array kata-kata (quotes) sederhana, misal: *"Hello!", "I'm hungry", "Nice website!", "Zzz..."*.
+- [ ] Logika Randomizer: Tampilkan teks setiap 10-15 detik selama 3 detik.
 
-### 2. State Persistence (Ingatan) 🧠
-Masalah: Saat browser di-refresh, pet kembali ke posisi awal (-150px).
-Solusi: Pet mengingat posisi terakhirnya.
-- [ ] Simpan koordinat X dan arah (Direction) ke `chrome.storage.local` setiap kali user berhenti nge-drag.
-- [ ] Saat load halaman, ambil koordinat tersebut sebagai posisi awal spawn.
+### 2. Follow Mouse Mode (Mainan Baru) 🖱️
+Menambahkan mode interaktif di mana pet mengejar kursor mouse user.
+- [ ] Tambahkan toggle "Follow Cursor" di `popup.html`.
+- [ ] Update logika `content.js`: Jika mode aktif, `direction` ditentukan oleh posisi mouse user relative terhadap pet.
 
-### 3. Customization (Opsional / Bonus) 🎨
-Solusi: Biar user tidak bosan dengan satu warna.
-- [ ] Tambahkan slider "Hue Rotate" di `popup.html`.
-- [ ] Gunakan CSS filter untuk mengubah warna baju pet secara dinamis tanpa perlu gambar baru.
+### 3. Code Refactoring & Optimization 🧹
+Membersihkan kode sebelum proyek dianggap "Selesai".
+- [ ] Rapikan `content.js`: Pisahkan konfigurasi ke objek `const CONFIG`.
+- [ ] Hapus `console.log` sisa debugging.
+- [ ] Pastikan semua aset gambar sudah dikompresi (TinyPNG) agar ekstensi ringan.
 
 ---
 
-## 🛠️ Persiapan Aset (Day 3)
-Jika ingin menggunakan fitur suara, siapkan file `.mp3` atau `.wav` durasi pendek (di bawah 1 detik).
-1. `jump_sfx.mp3`
-2. `land_sfx.mp3`
-
----
-
-## Catatan Teknis
-- Hati-hati dengan **Audio Policies** browser modern. Audio biasanya tidak boleh autoplay kecuali ada interaksi user (klik). Karena pet kita berbasis interaksi klik, seharusnya aman.
+## 💡 Ide Masa Depan (Post-MVP)
+- **Hunger System:** Pet perlu makan (klik icon makanan) supaya tidak lemas/lambat.
+- **Multiple Pets:** Memilih jenis hewan lain (Kucing/Anjing) di menu opsi.

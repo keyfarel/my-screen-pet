@@ -4,6 +4,7 @@
     // ===========================
     const imgElement = document.createElement('img');
 
+    // --- IMAGES ---
     const imgWalk1 = chrome.runtime.getURL('assets/walk_1.png');
     const imgWalk2 = chrome.runtime.getURL('assets/walk_2.png');
     const imgWalk1Blink = chrome.runtime.getURL('assets/walk_1_blink.png');
@@ -13,6 +14,26 @@
     const imgShock = chrome.runtime.getURL('assets/jump_shock.png');
     const imgLand = chrome.runtime.getURL('assets/jump_land.png');
 
+    // --- AUDIO ---
+    const sfxJump = new Audio(chrome.runtime.getURL('assets/sfx/jump.wav'));
+    const sfxLand = new Audio(chrome.runtime.getURL('assets/sfx/land.wav'));
+    const sfxStep = new Audio(chrome.runtime.getURL('assets/sfx/step.wav'));
+
+    sfxStep.volume = 0.4;
+    sfxLand.volume = 0.6;
+    sfxJump.volume = 0.7;
+
+    // --- GLOBAL SETTINGS ---
+    let isSoundEnabled = true;
+
+    // Helper: Play Sound
+    function playSound(audioObj) {
+        if (!isSoundEnabled) return;
+        audioObj.currentTime = 0;
+        audioObj.play().catch(e => { });
+    }
+
+    // --- DOM SETUP ---
     imgElement.src = imgWalk1;
     imgElement.classList.add('my-pet-walker');
     imgElement.style.left = '-150px';
@@ -30,12 +51,12 @@
     // 3. STATE VARIABLES
     // ===========================
     let positionX = -150;
-    let direction = 1; 
+    let direction = 1;
 
     let isWalking = true;
     let isShocked = false;
-    let isDragging = false; 
-    let isFalling = false; 
+    let isDragging = false;
+    let isFalling = false;
     let stateTimer = 0;
 
     let frameTimer = 0;
@@ -44,8 +65,55 @@
 
     let dragStartX = 0;
     let dragOffsetY = 0;
-    let hasMoved = false; 
+    let hasMoved = false;
 
+    // ===========================
+    // 3.5. MEMORY SYSTEM (LOAD & SAVE)
+    // ===========================
+
+    // A. LOAD STATE
+    chrome.storage.local.get(['petState', 'soundActive', 'petHue'], function (result) {
+        // 1. Load Posisi
+        if (result.petState) {
+            positionX = result.petState.x;
+            direction = result.petState.dir;
+            if (positionX > window.innerWidth) positionX = window.innerWidth - 100;
+
+            imgElement.style.left = positionX + 'px';
+            imgElement.style.transform = (direction === 1) ? "scaleX(1)" : "scaleX(-1)";
+        }
+
+        // 2. Load Sound
+        isSoundEnabled = result.soundActive !== undefined ? result.soundActive : true;
+
+        // 3. [NEW] Load Warna
+        if (result.petHue) {
+            imgElement.style.filter = `hue-rotate(${result.petHue}deg)`;
+        }
+    });
+
+    function savePetState() {
+        // [FIX] Cek apakah context extension masih valid sebelum akses storage
+        // Jika chrome.runtime.id tidak ada, berarti extension sudah di-reload/mati.
+        if (!chrome.runtime?.id) {
+            return;
+        }
+
+        try {
+            chrome.storage.local.set({
+                petState: {
+                    x: Math.round(positionX),
+                    dir: direction
+                }
+            });
+        } catch (e) {
+            // Tangkap error diam-diam agar tidak memerah di console
+            console.log("Extension context invalidated. Please refresh the page.");
+        }
+    }
+
+    // C. AUTO-SAVE INTERVAL (Setiap 5 detik)
+    const saveInterval = setInterval(savePetState, 5000); // Simpan ke variabel
     // ===========================
     // 4. INTERACTION
     // ===========================
@@ -53,24 +121,18 @@
     // A. MOUSE DOWN
     imgElement.addEventListener('mousedown', function (e) {
         if (isShocked || isFalling) return;
-        e.preventDefault(); 
+        e.preventDefault();
 
         isDragging = true;
-        isWalking = false; 
-        hasMoved = false; 
+        isWalking = false;
+        hasMoved = false;
 
-        // Catat posisi awal mouse untuk mendeteksi arah lemparan nanti
-        dragStartX = e.clientX; 
-        
-        // Hitung offset agar gambar tidak 'jumping' ke kursor
+        dragStartX = e.clientX;
         const rect = imgElement.getBoundingClientRect();
-        dragOffsetY = window.innerHeight - e.clientY; 
-        // Simpan offset X juga biar smooth
+        dragOffsetY = window.innerHeight - e.clientY;
         const offsetX = e.clientX - rect.left;
 
-        imgElement.classList.add('dragging'); 
-        
-        // Simpan offset X ke atribut elemen (trik biar bisa diakses di mousemove)
+        imgElement.classList.add('dragging');
         imgElement.dataset.offsetX = offsetX;
     });
 
@@ -79,23 +141,18 @@
         if (!isDragging) return;
 
         if (!hasMoved) {
-            hasMoved = true; 
-            imgElement.src = imgShock; // Ganti muka kaget (Drag Mode)
+            hasMoved = true;
+            imgElement.src = imgShock;
         }
 
-        // Ambil offset X yang disimpan tadi
         const offsetX = parseFloat(imgElement.dataset.offsetX);
-        
         const newX = e.clientX - offsetX;
         positionX = newX;
         imgElement.style.left = positionX + 'px';
 
         const newBottom = (window.innerHeight - e.clientY) - (imgElement.height / 2);
         imgElement.style.bottom = Math.max(0, newBottom) + 'px';
-        
-        // [VISUAL UPDATE] Ubah arah hadap REAL-TIME saat di-drag
-        // Kalau mouse ada di kanan posisi awal -> Madep Kanan
-        // Kalau mouse ada di kiri posisi awal -> Madep Kiri
+
         if (e.clientX > dragStartX) {
             imgElement.style.transform = "scaleX(1)";
         } else if (e.clientX < dragStartX) {
@@ -107,54 +164,49 @@
     window.addEventListener('mouseup', function (e) {
         if (!isDragging) return;
 
-        isDragging = false; 
+        isDragging = false;
         imgElement.classList.remove('dragging');
 
         if (!hasMoved) {
-            // --- KASUS: KLIK MURNI (INSTAN) ---
-            // Tidak ada delay, tidak ada timer. Langsung eksekusi.
             triggerJumpAnimation();
         } else {
-            // --- KASUS: DROP (LEMPAR/GANTI ARAH) ---
-            
-            // [LOGIC BARU] Tentukan arah berdasarkan posisi drop
-            if (e.clientX > dragStartX) {
-                direction = 1; // Jalan ke Kanan
-            } else if (e.clientX < dragStartX) {
-                direction = -1; // Jalan ke Kiri
-            }
-            // Update visual arah segera
+            if (e.clientX > dragStartX) direction = 1;
+            else if (e.clientX < dragStartX) direction = -1;
+
             imgElement.style.transform = (direction === 1) ? "scaleX(1)" : "scaleX(-1)";
 
-            // Animasi Jatuh
-            isFalling = true; 
+            isFalling = true;
             isWalking = false;
+            savePetState();
 
             setTimeout(() => {
                 imgElement.style.bottom = '0px';
                 setTimeout(() => {
                     imgElement.src = imgLand;
+                    playSound(sfxLand);
                     setTimeout(() => {
-                        isFalling = false; 
-                        isWalking = true;  
-                        imgElement.src = imgWalk1; 
-                    }, 1000); 
-                }, 300); 
-            }, 50); 
+                        isFalling = false;
+                        isWalking = true;
+                        imgElement.src = imgWalk1;
+                        savePetState();
+                    }, 1000);
+                }, 300);
+            }, 50);
         }
     });
 
-    // Fungsi Animasi Lompat (Simple & Instan)
     function triggerJumpAnimation() {
         isShocked = true;
         isWalking = false;
 
         imgElement.src = imgShock;
         imgElement.classList.add('pet-jump');
+        playSound(sfxJump);
 
         setTimeout(() => {
             imgElement.classList.remove('pet-jump');
             imgElement.src = imgLand;
+            playSound(sfxLand);
 
             setTimeout(() => {
                 isShocked = false;
@@ -165,16 +217,30 @@
     }
 
     // ===========================
-    // 5. ON/OFF LOGIC
+    // 5. LISTENERS (POPUP)
     // ===========================
+
     chrome.storage.local.get(['petActive'], function (result) {
         const isActive = result.petActive !== undefined ? result.petActive : true;
         if (!isActive) document.body.classList.add('hide-my-pet');
     });
+
     chrome.runtime.onMessage.addListener(function (request) {
+        // Toggle Hide/Show
         if (request.action === "togglePet") {
             if (request.status) document.body.classList.remove('hide-my-pet');
             else document.body.classList.add('hide-my-pet');
+        }
+
+        // Toggle Sound
+        if (request.action === "toggleSound") {
+            isSoundEnabled = request.status;
+        }
+
+        // Update Color [NEW]
+        if (request.action === "updateHue") {
+            // Apply filter CSS secara dinamis
+            imgElement.style.filter = `hue-rotate(${request.value}deg)`;
         }
     });
 
@@ -188,20 +254,15 @@
         }
 
         const screenWidth = window.innerWidth;
-
-        // --- BLINK ---
         if (blinkTimer > 0) blinkTimer--;
         else if (Math.random() < 0.01) blinkTimer = blinkDuration;
         const isBlinking = (blinkTimer > 0);
 
-        // --- KAGET ---
         if (isShocked) {
             imgElement.style.transform = (direction === 1) ? "scaleX(1)" : "scaleX(-1)";
             requestAnimationFrame(updatePet);
             return;
         }
-
-        // --- JALAN ---
         else if (isWalking) {
             positionX += (speed * direction);
             imgElement.style.left = positionX + 'px';
@@ -213,6 +274,7 @@
             if (frameTimer > walkAnimSpeed) {
                 frameTimer = 0;
                 currentWalkFrame = (currentWalkFrame === 1) ? 2 : 1;
+                if (currentWalkFrame === 1) playSound(sfxStep);
             }
 
             if (currentWalkFrame === 1) imgElement.src = isBlinking ? imgWalk1Blink : imgWalk1;
@@ -224,8 +286,6 @@
                 imgElement.src = imgSit1;
             }
         }
-
-        // --- DUDUK ---
         else {
             stateTimer--;
             imgElement.src = isBlinking ? imgSitBlink : imgSit1;
