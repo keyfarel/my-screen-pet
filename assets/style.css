@@ -1,81 +1,61 @@
+/* --- PET MAIN STYLE --- */
 .my-pet-walker {
     position: fixed;
     bottom: 0px;
     z-index: 2147483647;
-
-    /* [UBAH INI] Kecilkan dari 128px ke 64px (atau 80px/96px sesuai selera) */
-    width: 64px;
+    width: 64px; /* Ukuran Pet */
     height: auto;
-
     pointer-events: auto;
     cursor: pointer;
     user-select: none;
-
-    /* Gunakan pixelated agar saat di-resize gambar tidak buram */
     image-rendering: pixelated;
-
     transition: transform 0.1s ease-out, bottom 0.3s ease-in-out;
-    -webkit-user-drag: none;
-    user-drag: none;
 }
 
-/* Tambahkan class baru untuk efek lompat */
+/* --- ANIMATIONS & STATES --- */
 .pet-jump {
     bottom: 30px !important;
-    /* Meloncat naik 30px */
-}
-
-/* Class khusus untuk menyembunyikan pet */
-.hide-my-pet .my-pet-walker {
-    display: none !important;
 }
 
 .my-pet-walker.dragging {
     transition: none !important;
     cursor: grabbing !important;
-    /* Tangan menggenggam */
 }
 
-/* Speech Bubble Styling */
+/* Helper hide global */
+.hide-my-pet .my-pet-walker {
+    display: none !important;
+}
+
+/* --- SPEECH BUBBLE --- */
 .pet-speech-bubble {
     position: fixed;
     z-index: 2147483648;
-    /* Harus lebih tinggi dari Pet */
     background: #fff;
     border: 2px solid #000;
     border-radius: 8px;
     padding: 8px 12px;
     color: #000;
     font-family: 'Courier New', Courier, monospace;
-    /* Font retro */
     font-size: 12px;
     font-weight: bold;
     white-space: nowrap;
     pointer-events: none;
-    /* Agar tidak mengganggu klik */
-
-    /* Animasi Muncul */
     opacity: 0;
-    transform: translateY(10px) scale(0.8);
-    transition: opacity 0.2s, transform 0.2s;
     box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
-
     text-align: center;
     min-width: 60px;
-    /* Lebar minimum biar ga gepeng */
     transform: translateX(-50%) translateY(10px) scale(0.8);
-
     transform-origin: bottom center;
     transition: opacity 0.2s, transform 0.2s;
 }
 
-/* State Muncul */
 .pet-speech-bubble.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0) scale(1);
 }
 
-/* Segitiga Kecil di Bawah Bubble (Arrow) */
+/* Bubble Triangle (Border) */
 .pet-speech-bubble::after {
     content: '';
     position: absolute;
@@ -87,7 +67,7 @@
     border-color: #000 transparent transparent transparent;
 }
 
-/* Segitiga Putih (untuk menimpa border hitam biar rapi) */
+/* Bubble Triangle (White Fill) */
 .pet-speech-bubble::before {
     content: '';
     position: absolute;
@@ -98,25 +78,4 @@
     border-style: solid;
     border-color: #fff transparent transparent transparent;
     z-index: 1;
-}
-
-#followBtn { 
-    background-color: #f0f0f0; 
-    color: #333; 
-    width: 45px; 
-    padding: 0; 
-}
-
-/* KONDISI AKTIF (Biru) */
-#followBtn.active { 
-    background-color: #2196F3; 
-    color: white; 
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-}
-
-/* KONDISI MATI / DISABLED (Abu-abu redup - Opsional) */
-/* Ini menyamakan style dengan #soundBtn.muted */
-#followBtn.disabled { 
-    background-color: #ddd; 
-    color: #999; 
 }

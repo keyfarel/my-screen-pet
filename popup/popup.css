@@ -1,0 +1,146 @@
+/* --- LAYOUT GLOBAL --- */
+body {
+    width: 240px;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* --- HEADER --- */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.header img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    transition: filter 0.2s;
+}
+
+h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* --- STATUS INDICATOR --- */
+.status-container {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.active {
+    background-color: #4CAF50;
+    box-shadow: 0 0 8px #4CAF50;
+}
+
+.status-dot.inactive {
+    background-color: #f44336;
+}
+
+/* --- CONTROLS --- */
+.control-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* --- BUTTON SPECIFIC --- */
+#toggleBtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 15px;
+    flex-grow: 1;
+}
+
+#toggleBtn.off {
+    background-color: #f44336;
+}
+
+#soundBtn, #followBtn {
+    background-color: #f0f0f0;
+    color: #333;
+    width: 45px;
+    padding: 0;
+}
+
+#soundBtn svg, #followBtn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* States for Icons */
+#soundBtn.muted, #followBtn.disabled {
+    background-color: #ddd;
+    color: #999;
+}
+
+#followBtn.active {
+    background-color: #2196F3;
+    color: white;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* --- COLOR SLIDER --- */
+.color-control {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.color-control label {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+input[type=range] {
+    width: 100%;
+    cursor: pointer;
+}
